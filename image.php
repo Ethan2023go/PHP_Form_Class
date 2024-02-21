@@ -10,7 +10,55 @@
  * 5.輸出檔案
  */
 
+ if(!empty($_FILES['img']['tmp_name'])){
+   move_uploaded_file($_FILES['img']['tmp_name'],"./imgs/".$_FILES['img']['name']);
+   $source_path="./imgs/".$_FILES['img']['name'];
+   $type=$_FILES['img']['name'];
+   switch($type){
+    case 'image/jpeg':
+        $source=imagecreatefromjpeg($source_path);
+        list($width,$height)=getimagesize($source_path);
+    break;
+    case 'image/png':
+        $source=imagecreatefrompng($source_path);
+        list($width,$height)=getimagesize($source_path);
+    break;
+    case 'image/gif':
+        $source=imagecreatefromgif($source_path);
+        list($width,$height)=getimagesize($source_path);
+    break;
+    case 'image/bmp':
+        $source=imagecreatefrombmp($source_path);
+        list($width,$height)=getimagesize($source_path);
+    break;
+
+   }
+   $dath_path="./imgs/small".$_FILES['img']['name'];
+   $dst_width=150;
+   $dst_height=200;
+   $dst_source=imagecreatetruecolor($dst_width,$dst_height);
+   imagecopyresampled($dst_source,$source,0,0,0,0,$dst_width,$dst_height,$width,$height);
+   switch($type){
+    case 'image/jpeg':
+        imagejpeg($dst_source,$dst_path);
+    break;
+    case 'image/png':
+        imagepng($dst_source,$dst_path);
+    break;
+    case 'image/gif':
+        imagegif($dst_source,$dst_path);
+    break;
+    case 'image/bmp':
+        imagebmp($dst_source,$dst_path);
+    break;
+}
+
+imagedestroy($source);
+imagedestroy($dst_source);
+
+ }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
